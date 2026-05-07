@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Fit | 설정</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-icon">🥬</span><span>Meal Fit</span></a>
+    <nav class="nav">
+      <a href="login.html">로그인/회원가입</a>
+      <a href="search.html">레시피 검색</a>
+      <a href="recommend.html">메뉴추천</a>
+      <a href="ingredients.html">재료관리</a>
+      <a class="active" href="settings.html">설정</a>
+    </nav>
+  </header>
+
+  <main class="page" style="max-width:900px;">
+    <section class="panel">
+      <p class="eyebrow">마이페이지</p>
+      <h1 style="font-size:2.3rem;">설정</h1>
+      <div class="grid-two">
+        <article class="panel" style="margin:0;">
+          <h3>프로필 관리</h3>
+          <div class="form-grid">
+            <input type="text" placeholder="닉네임" value="MealFit 사용자" />
+            <button class="btn">프로필 수정</button>
+          </div>
+        </article>
+
+        <article class="panel" style="margin:0;">
+          <h3>선호메뉴 관리</h3>
+          <div class="chips">
+            <button class="chip active" type="button">한식</button>
+            <button class="chip" type="button">저염식</button>
+            <button class="chip" type="button">간편요리</button>
+            <button class="chip" type="button">매운맛</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <div class="inline-between">
+          <strong>알림 설정</strong>
+          <input id="alarmToggle" class="toggle" type="checkbox" checked />
+        </div>
+        <div class="inline-between" style="margin-top:10px;">
+          <strong>다크 모드</strong>
+          <input id="darkToggle" class="toggle" type="checkbox" />
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <h3>예산 관리</h3>
+        <div class="row">
+          <input id="monthlyBudget" type="number" value="150000" min="0" step="1000" />
+          <button class="btn primary" id="saveBudgetBtn" type="button">예산 저장</button>
+        </div>
+        <p id="saveBudgetText" style="color:#5a6354;">현재 월 예산: 150,000원</p>
+      </div>
+
+      <button class="btn ghost" style="margin-top:16px; border-color:#d2b2a9; color:var(--danger);">로그아웃</button>
+    </section>
+  </main>
+  <script src="../js/app.js"></script>
+</body>
+</html>

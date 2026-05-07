@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Fit | 재료관리</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-icon">🥬</span><span>Meal Fit</span></a>
+    <nav class="nav">
+      <a href="login.html">로그인/회원가입</a>
+      <a href="search.html">레시피 검색</a>
+      <a href="recommend.html">메뉴추천</a>
+      <a class="active" href="ingredients.html">재료관리</a>
+      <a href="settings.html">설정</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="grid-two">
+      <article class="panel">
+        <p class="eyebrow">재료관리</p>
+        <h2>재료 등록</h2>
+        <div class="form-grid">
+          <input id="ingredientInput" type="text" placeholder="예: 계란 6개" />
+          <button class="btn primary" type="button" id="addIngredientBtn">재료 등록</button>
+        </div>
+        <h3 style="margin-top:16px;">보유 재료 목록</h3>
+        <ul class="list" id="ingredientList">
+          <li>김치</li>
+          <li>계란</li>
+          <li>대파</li>
+        </ul>
+      </article>
+
+      <article class="panel">
+        <p class="eyebrow">장보기 리스트 작성</p>
+        <h2>부족한 재료</h2>
+        <div class="form-grid">
+          <input id="shoppingInput" type="text" placeholder="예: 돼지고기 앞다리살 400g" />
+          <button class="btn" type="button" id="addShoppingBtn">리스트 추가</button>
+        </div>
+        <ul class="list" id="shoppingList" style="margin-top:16px;">
+          <li>돼지고기 400g</li>
+          <li>양파 2개</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>보유 재료 기반 추천</h2>
+      <p style="color:#5d6659;">재료를 많이 등록할수록 추천 레시피 정확도가 높아집니다.</p>
+      <a class="btn primary" href="recommend.html">추천 메뉴 다시 보기</a>
+    </section>
+  </main>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>

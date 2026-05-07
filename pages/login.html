@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Fit | 로그인</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html"><span class="brand-icon">🥬</span><span>Meal Fit</span></a>
+    <nav class="nav">
+      <a class="active" href="login.html">로그인/회원가입</a>
+      <a href="search.html">레시피 검색</a>
+      <a href="recommend.html">메뉴추천</a>
+      <a href="ingredients.html">재료관리</a>
+      <a href="settings.html">설정</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="panel" style="max-width:680px; margin:0 auto;">
+      <p class="eyebrow">로그인/회원가입</p>
+      <h1 style="font-size:2.5rem;">Meal Fit 로그인</h1>
+      <div class="auth-tabs" style="margin-bottom:12px;">
+        <button class="chip active" id="showLoginBtn" type="button">로그인</button>
+        <button class="chip" id="showSignupBtn" type="button">회원가입</button>
+      </div>
+
+      <form class="form-grid" id="loginForm">
+        <div>
+          <label for="loginId">아이디</label>
+          <input id="loginId" type="text" placeholder="아이디 입력" required />
+        </div>
+        <div>
+          <label for="loginPassword">비밀번호</label>
+          <input id="loginPassword" type="password" placeholder="비밀번호 입력" required />
+        </div>
+        <button class="btn primary full" type="submit">로그인</button>
+      </form>
+
+      <form class="form-grid" id="signupForm" style="display:none;">
+        <div>
+          <label for="signupId">아이디</label>
+          <input id="signupId" type="text" placeholder="4자 이상" required />
+        </div>
+        <div>
+          <label for="signupEmail">이메일</label>
+          <input id="signupEmail" type="email" placeholder="example@mail.com" required />
+        </div>
+        <div>
+          <label for="signupPassword">비밀번호</label>
+          <input id="signupPassword" type="password" placeholder="6자 이상" required />
+        </div>
+        <div>
+          <label for="signupPasswordConfirm">비밀번호 확인</label>
+          <input id="signupPasswordConfirm" type="password" placeholder="비밀번호 재입력" required />
+        </div>
+        <button class="btn primary full" type="submit">회원가입</button>
+      </form>
+
+      <div class="notice" id="authNotice" style="display:none; margin-top:12px;"></div>
+
+      <div class="auth-status" id="authStatus" style="margin-top:12px;"></div>
+
+      <p style="text-align:center; margin:16px 0 8px; color:#5e6657;">SNS 계정 연동/로그인</p>
+      <div class="socials">
+        <button class="social kakao" type="button" data-provider="kakao">K</button>
+        <button class="social naver" type="button" data-provider="naver">N</button>
+      </div>
+      <div class="social-actions" style="margin-top:10px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn" id="unlinkKakaoBtn" type="button">카카오 연동 해제</button>
+        <button class="btn" id="unlinkNaverBtn" type="button">네이버 연동 해제</button>
+        <button class="btn ghost" id="logoutBtn" type="button">로그아웃</button>
+      </div>
+      <p style="text-align:center; margin-top:14px; color:#5c6158;">
+        SNS 버튼: 로그인 상태에서는 계정 연동, 로그아웃 상태에서는 SNS 로그인/빠른 회원가입
+      </p>
+    </section>
+  </main>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>
