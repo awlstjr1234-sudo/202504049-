@@ -31,12 +31,11 @@
           <input id="ingredientInput" type="text" placeholder="예: 계란 6개" />
           <button class="btn primary" type="button" id="addIngredientBtn">재료 등록</button>
         </div>
-        <h3 style="margin-top:16px;">보유 재료 목록</h3>
-        <ul class="list" id="ingredientList">
-          <li>김치</li>
-          <li>계란</li>
-          <li>대파</li>
-        </ul>
+        <div class="inline-between" style="margin-top:16px; align-items:center;">
+          <h3 style="margin:0;">보유 재료 목록</h3>
+          <button class="btn ghost" type="button" id="clearIngredientBtn">전체 초기화</button>
+        </div>
+        <ul class="list managed-list" id="ingredientList"></ul>
       </article>
 
       <article class="panel">
@@ -46,10 +45,11 @@
           <input id="shoppingInput" type="text" placeholder="예: 돼지고기 앞다리살 400g" />
           <button class="btn" type="button" id="addShoppingBtn">리스트 추가</button>
         </div>
-        <ul class="list" id="shoppingList" style="margin-top:16px;">
-          <li>돼지고기 400g</li>
-          <li>양파 2개</li>
-        </ul>
+        <div class="inline-between" style="margin-top:16px; align-items:center;">
+          <h3 style="margin:0;">장보기 리스트</h3>
+          <button class="btn ghost" type="button" id="clearShoppingBtn">전체 초기화</button>
+        </div>
+        <ul class="list managed-list" id="shoppingList"></ul>
       </article>
     </section>
 

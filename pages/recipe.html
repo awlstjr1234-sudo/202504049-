@@ -25,22 +25,17 @@
   <main class="page">
     <section class="panel">
       <p class="eyebrow">레시피</p>
-      <h1 style="font-size:2.2rem;">김치제육볶음 상세</h1>
+      <h1 id="detailTitle" style="font-size:2.2rem;">레시피 상세</h1>
+      <p id="detailAiNote" class="notice" style="margin:10px 0 16px;">AI 검색 결과를 반영해 메뉴별 상세 정보를 불러오는 중입니다.</p>
       <div class="row">
         <article class="panel" style="margin:0;">
           <h3>재료목록</h3>
-          <ul class="list">
-            <li>돼지고기 200g</li>
-            <li>김치 150g</li>
-            <li>양파 1/2개</li>
-            <li>고추장 1큰술</li>
-            <li>간장 1큰술</li>
-          </ul>
+          <ul id="detailIngredients" class="list"></ul>
         </article>
         <article class="panel" style="margin:0;">
           <h3>예상 비용</h3>
-          <p class="price" style="font-size:1.6rem; margin-top:8px;">약 7,000원</p>
-          <p style="color:#5b6556;">보유 재료 2개 활용 시 약 1,800원 절약</p>
+          <p id="detailPrice" class="price" style="font-size:1.6rem; margin-top:8px;">약 0원</p>
+          <p id="detailPriceMeta" style="color:#5b6556;">메뉴별 AI 분석 가격을 계산 중입니다.</p>
         </article>
       </div>
     </section>
@@ -48,20 +43,11 @@
     <section class="grid-two">
       <article class="panel">
         <h2>조리방법</h2>
-        <ol class="list" style="padding-left:22px;">
-          <li>팬에 식용유를 두르고 양파를 먼저 볶아 향을 냅니다.</li>
-          <li>돼지고기를 넣고 겉면이 익을 때까지 센 불로 볶습니다.</li>
-          <li>김치와 양념(고추장, 간장)을 넣어 4분간 더 볶습니다.</li>
-          <li>약불로 줄여 수분을 맞춘 뒤 기호에 맞게 마무리합니다.</li>
-        </ol>
+        <ol id="detailSteps" class="list" style="padding-left:22px;"></ol>
       </article>
       <article class="panel">
         <h2>대체재료 추천</h2>
-        <ul class="list">
-          <li>돼지고기 → 닭다리살</li>
-          <li>양파 → 대파 + 당근</li>
-          <li>고추장 → 고춧가루 + 된장(소량)</li>
-        </ul>
+        <ul id="detailSubs" class="list"></ul>
         <a class="btn" style="margin-top:10px;" href="ingredients.html">재료 등록하러 가기</a>
       </article>
     </section>

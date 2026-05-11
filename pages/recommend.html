@@ -39,10 +39,17 @@
         </div>
       </div>
       <div class="inline-between" style="margin-bottom:14px; justify-content:flex-start;">
-        <button class="btn primary" id="recommendAiBtn" type="button">AI 실시간 추천 받기</button>
+        <button class="btn primary" id="recommendAiBtn" type="button">AI 추천 받기</button>
+      </div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div>
+          <label for="aiMenuPrompt">AI에게 메뉴 추천 질문</label>
+          <textarea id="aiMenuPrompt" rows="3" placeholder="예: 매콤하고 든든한 저녁 메뉴 추천해줘"></textarea>
+        </div>
+        <button class="btn" id="askAiMenuBtn" type="button">AI 메뉴 추천 받기</button>
       </div>
       <div id="recommendAiResult" class="ai-result" style="margin-bottom:14px;" aria-live="polite">
-        <p class="notice">예산 상한을 선택한 뒤 AI 실시간 추천 받기 버튼을 누르면 응답이 순차적으로 생성됩니다.</p>
+        <p class="notice">예산 상한을 선택한 뒤 AI 추천 받기 버튼을 누르면 답변이 생성 완료 후 표시됩니다.</p>
       </div>
       <p id="recommendAiMeta" style="margin:0; color:#5a6455; font-size:0.9rem;">응답 대기 중</p>
       <div id="recommendList" class="card-grid"></div>

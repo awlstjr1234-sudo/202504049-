@@ -264,9 +264,24 @@ textarea {
   cursor: pointer;
 }
 
+.social { display: flex; align-items: center; justify-content: center; }
 .social.kakao { background: #ffdc00; }
-.social.naver { background: #00c63b; color: #fff; }
+.social.naver { background: #03c75a; color: #fff; }
+.social.google { background: #fff; border: 1.5px solid #dadce0; }
 .social.mail { background: #7cc2df; color: #fff; }
+
+.social-labels {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: #6b7565;
+}
+.social-labels span {
+  width: 46px;
+  text-align: center;
+}
 
 .chips {
   display: flex;
@@ -335,6 +350,48 @@ textarea {
   gap: 8px;
 }
 
+.managed-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.managed-item {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.managed-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.managed-item .item-check {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #5f8742;
+  flex: 0 0 auto;
+}
+
+.managed-item .item-text {
+  word-break: break-word;
+  flex: 1;
+}
+
+.managed-item.completed {
+  background: #f7f8f5;
+  border-color: #d4dbcb;
+}
+
+.managed-item.completed .item-text {
+  text-decoration: line-through;
+  color: #727d6f;
+}
+
 .toggle {
   appearance: none;
   width: 54px;
@@ -385,6 +442,42 @@ textarea {
   border-radius: 14px;
   padding: 14px;
   background: #f5faef;
+}
+
+.account-summary-card {
+  border: 1px solid #ccd9bf;
+  border-radius: 14px;
+  background: #f9fcf5;
+  padding: 14px;
+}
+
+.account-summary-card h3 {
+  margin: 0 0 10px;
+}
+
+.account-summary-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.account-summary-grid div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid #d8e2ce;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.account-summary-grid span {
+  color: #61705d;
+  font-size: 0.92rem;
+}
+
+.account-summary-grid strong {
+  text-align: right;
+  word-break: break-word;
 }
 
 .ai-summary-card h3 {
