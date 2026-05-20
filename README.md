@@ -14,9 +14,17 @@
 
 ## 실행 방법
 
-정적 페이지이므로 브라우저에서 index.html을 열면 됩니다.
+정적 페이지이므로 브라우저에서 `index.html`을 열면 됩니다.
 
 VS Code Live Server 확장 사용 시 루트에서 실행하면 전체 링크가 정상 동작합니다.
+
+백엔드 서버를 켜려면 `backend`에서 다음을 실행하세요:
+
+```bash
+cd backend
+npm install
+npm start
+```
 
 ## 구현된 기능
 
@@ -38,6 +46,12 @@ VS Code Live Server 확장 사용 시 루트에서 실행하면 전체 링크가
 - `KAKAO_CLIENT_ID`, `KAKAO_CLIENT_SECRET`
 - `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+
+### Codespaces preview 환경에서 실행할 때
+
+- 프론트엔드/백엔드가 모두 preview URL로 열리는 경우 `FRONTEND_URL`과 `BACKEND_URL`을 아래처럼 실제 preview 주소로 바꾸세요.
+  - `https://humble-cod-97pqq457vgvr24v-5000.app.github.dev`
+- 만약 프록시 호스트가 변경되면 `BACKEND_URL`과 SNS 리디렉트 URI도 해당 호스트로 등록해야 합니다.
 
 ### 카카오 리디렉션 URI 예시
 

@@ -2,7 +2,24 @@
 // Meal Fit 프론트엔드 - 백엔드 API 연동 버전
 // ============================================
 
-const API_BASE_URL = `${window.location.origin}/api`;
+const getDefaultBackendOrigin = () => {
+  const { hostname, protocol, port } = window.location;
+  const githubCodespaceMatch = hostname.match(/^(.*?)-(\d+)\.app\.github\.dev$/);
+
+  if (githubCodespaceMatch) {
+    // Codespaces 미리보기에서 프론트엔드가 5504 등 다른 포트로 열리면
+    // 백엔드가 5000 포트에 있기 때문에 해당 호스트로 API를 호출합니다.
+    return `${protocol}//${githubCodespaceMatch[1]}-5000.app.github.dev`;
+  }
+
+  if (port && port !== "5000") {
+    return `${protocol}//${hostname}:5000`;
+  }
+
+  return `${protocol}//${hostname}${port ? `:${port}` : ""}`;
+};
+
+const API_BASE_URL = `${getDefaultBackendOrigin()}/api`;
 
 const recipes = [
   { name: "김치제육볶음", price: 7000, category: "간편요리", icon: "🍲" },

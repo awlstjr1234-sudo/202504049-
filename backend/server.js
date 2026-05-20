@@ -14,7 +14,7 @@ const HOST = process.env.HOST || "0.0.0.0";
 app.set("trust proxy", true);
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === "development" ? true : process.env.FRONTEND_URL,
+  origin: process.env.NODE_ENV !== "production" ? true : process.env.FRONTEND_URL,
   credentials: true
 };
 

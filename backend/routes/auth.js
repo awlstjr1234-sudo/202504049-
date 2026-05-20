@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(cookieParser());
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = process.env.BACKEND_URL;
 const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key_change_in_production_12345";
 const JWT_EXPIRE = process.env.JWT_EXPIRE || "7d";
 const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID || "";
@@ -27,14 +27,38 @@ const generateUniqueUsername = (provider) => {
   return `${provider}_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 };
 
+const isLocalHostUrl = (url) => {
+  return typeof url === "string" && /(localhost|127\.0\.0\.1)/i.test(url);
+};
+
+const getRequestProtocol = (req) => {
+  const forwardedProto = req.headers["x-forwarded-proto"];
+  if (typeof forwardedProto === "string") {
+    return forwardedProto.split(",")[0].trim();
+  }
+  return req.protocol;
+};
+
+const getRequestHost = (req) => {
+  const forwardedHost = req.headers["x-forwarded-host"];
+  if (typeof forwardedHost === "string") {
+    return forwardedHost.split(",")[0].trim();
+  }
+  return req.get("host");
+};
+
 const getBackendUrl = (req) => {
-  if (process.env.BACKEND_URL) return process.env.BACKEND_URL;
-  return `${req.protocol}://${req.get("host")}`;
+  if (BACKEND_URL && !isLocalHostUrl(BACKEND_URL)) {
+    return BACKEND_URL;
+  }
+  return `${getRequestProtocol(req)}://${getRequestHost(req)}`;
 };
 
 const getFrontendUrl = (req) => {
-  if (process.env.FRONTEND_URL) return process.env.FRONTEND_URL;
-  return `${req.protocol}://${req.get("host")}`;
+  if (FRONTEND_URL && !isLocalHostUrl(FRONTEND_URL)) {
+    return FRONTEND_URL;
+  }
+  return `${getRequestProtocol(req)}://${getRequestHost(req)}`;
 };
 
 const getOAuthRedirectUri = (provider, req) => `${getBackendUrl(req)}/api/auth/${provider}/callback`;
