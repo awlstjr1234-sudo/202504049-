@@ -1,0 +1,18 @@
+# Unit file for Meal Fit backend (for reference; copy to /etc/systemd/system/mealfit.service)
+[Unit]
+Description=Meal Fit backend service
+After=network.target docker.service
+
+[Service]
+Type=simple
+# Set WorkingDirectory to your repository root path
+WorkingDirectory=/workspaces/202504049-
+# ExecStart should point to the start script in the repo; adjust path if needed
+ExecStart=/usr/bin/env bash /workspaces/202504049-/start.sh
+Restart=on-failure
+RestartSec=5
+# Set the user to the account that should run the service (do NOT run as root normally)
+#User=yourusername
+
+[Install]
+WantedBy=multi-user.target
