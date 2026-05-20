@@ -1,67 +1,1017 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meal Fit | 메인</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
-</head>
-<body>
-  <div class="grain"></div>
-  <header class="topbar">
-    <a class="brand" href="index.html">
-      <span class="brand-icon">🥬</span>
-      <span>Meal Fit</span>
-    </a>
-    <nav class="nav">
-      <a href="pages/login.html">로그인/회원가입</a>
-      <a href="pages/search.html">레시피 검색</a>
-      <a href="pages/recommend.html">메뉴추천</a>
-      <a href="pages/ingredients.html">재료관리</a>
-      <a href="pages/settings.html">설정</a>
-    </nav>
-  </header>
+// ============================================
+// Meal Fit 프론트엔드 - 백엔드 API 연동 버전
+// ============================================
 
-  <main class="page">
-    <section class="hero panel">
-      <div>
-        <p class="eyebrow">예산에 딱 맞춘 집밥 도우미</p>
-        <h1>Meal Fit</h1>
-        <p class="lead">보유 재료와 예산, 선호도를 기반으로 AI가 실용적인 레시피를 추천해줍니다.</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="pages/search.html">레시피 검색 시작</a>
-          <a class="btn" href="pages/recommend.html">추천 레시피 보기</a>
+const API_BASE_URL = `${window.location.origin}/api`;
+
+const recipes = [
+  { name: "김치제육볶음", price: 7000, category: "간편요리", icon: "🍲" },
+  { name: "스팸달걀덮밥", price: 9000, category: "간편요리", icon: "🍛" },
+  { name: "된장찌개", price: 5200, category: "초저가", icon: "🥘" },
+  { name: "닭가슴살 샐러드", price: 6800, category: "건강식", icon: "🥗" },
+  { name: "참치김치볶음밥", price: 4300, category: "초저가", icon: "🍚" },
+  { name: "두부스테이크", price: 6100, category: "건강식", icon: "🍽️" },
+  { name: "계란간장밥", price: 2800, category: "초저가", icon: "🥚" },
+  { name: "멸치주먹밥", price: 3200, category: "초저가", icon: "🍙" },
+  { name: "콩나물국밥", price: 3900, category: "초저가", icon: "🥣" },
+  { name: "감자채볶음", price: 3500, category: "초저가", icon: "🥔" },
+  { name: "김치볶음밥", price: 4800, category: "초저가", icon: "🍳" },
+  { name: "우동", price: 5600, category: "간편요리", icon: "🍜" },
+  { name: "카레라이스", price: 6200, category: "간편요리", icon: "🍛" },
+  { name: "오므라이스", price: 7300, category: "간편요리", icon: "🍅" },
+  { name: "토마토파스타", price: 7800, category: "간편요리", icon: "🍝" },
+  { name: "크림파스타", price: 8700, category: "간편요리", icon: "🧀" },
+  { name: "소고기무국", price: 8200, category: "간편요리", icon: "🍲" },
+  { name: "비빔국수", price: 5400, category: "간편요리", icon: "🥢" },
+  { name: "불고기덮밥", price: 9500, category: "간편요리", icon: "🥩" },
+  { name: "마파두부", price: 7600, category: "간편요리", icon: "🌶️" },
+  { name: "그릭요거트볼", price: 5900, category: "건강식", icon: "🥣" },
+  { name: "닭가슴살 또띠아", price: 7400, category: "건강식", icon: "🌯" },
+  { name: "연어포케", price: 9800, category: "건강식", icon: "🍣" },
+  { name: "현미채소비빔밥", price: 6900, category: "건강식", icon: "🥬" },
+  { name: "렌틸콩 샐러드", price: 6600, category: "건강식", icon: "🥗" },
+  { name: "두부김치샐러드", price: 5700, category: "건강식", icon: "🥗" },
+  { name: "닭가슴살 월남쌈", price: 8800, category: "건강식", icon: "🥬" },
+  { name: "버섯들깨수프", price: 6300, category: "건강식", icon: "🍄" },
+  { name: "아보카도오픈샌드", price: 7100, category: "건강식", icon: "🥑" },
+  { name: "순두부찌개", price: 5200, category: "초저가", icon: "🍲" },
+  { name: "김치말이국수", price: 4500, category: "초저가", icon: "🍜" },
+  { name: "참치마요덮밥", price: 4900, category: "초저가", icon: "🍚" },
+  { name: "두부계란탕", price: 4100, category: "초저가", icon: "🥣" },
+  { name: "어묵탕", price: 4600, category: "초저가", icon: "🍢" },
+  { name: "미역국", price: 3800, category: "초저가", icon: "🥬" }
+];
+
+// ============================================
+// 인증 & 토큰 관리
+// ============================================
+
+const getToken = () => localStorage.getItem("mealfit_token");
+const setToken = (token) => localStorage.setItem("mealfit_token", token);
+const clearToken = () => localStorage.removeItem("mealfit_token");
+
+const getAuthHeaders = () => {
+  const token = getToken();
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` })
+  };
+};
+
+const apiCall = async (endpoint, options = {}) => {
+  const url = endpoint.startsWith("http") ? endpoint : `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+  const headers = getAuthHeaders();
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...headers,
+        ...options.headers
+      }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        clearToken();
+        window.location.href = "pages/login.html";
+      }
+      throw new Error(data.message || "API 요청 실패");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("API 오류:", error);
+    throw error;
+  }
+};
+
+// ============================================
+// 유틸리티 함수
+// ============================================
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getNowLabel() {
+  const date = new Date();
+  return `${date.toLocaleDateString("ko-KR")} ${date.toLocaleTimeString("ko-KR")}`;
+}
+
+function randomPick(list) {
+  if (!list.length) return "";
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function formatWon(value) {
+  return Number(value).toLocaleString("ko-KR") + "원";
+}
+
+function createRecipeCard(recipe) {
+  const detailHref = `recipe.html?menu=${encodeURIComponent(recipe.name)}`;
+  return `
+    <article class="recipe-card">
+      <div class="thumb">${recipe.icon}</div>
+      <div class="recipe-info">
+        <strong>${recipe.name}</strong>
+        <div class="inline-between">
+          <span>${recipe.category}</span>
+          <span class="price">약 ${formatWon(recipe.price)}</span>
         </div>
+        <a class="btn primary" href="${detailHref}">레시피 보기</a>
       </div>
-    </section>
+    </article>
+  `;
+}
 
-    <section class="panel">
-      <div class="sitemap-grid">
-        <a class="map-card" href="pages/login.html">
-          <strong>로그인/회원가입</strong>
-          <span>이메일 로그인 · SNS 간편 로그인</span>
-        </a>
-        <a class="map-card" href="pages/recommend.html">
-          <strong>메뉴추천</strong>
-          <span>예산기반 추천 · 메뉴검색</span>
-        </a>
-        <a class="map-card" href="pages/search.html">
-          <strong>레시피</strong>
-          <span>재료목록 · 조리방법 · 예상비용 · 대체재료</span>
-        </a>
-        <a class="map-card" href="pages/ingredients.html">
-          <strong>재료관리</strong>
-          <span>재료 등록 · 장보기 리스트</span>
-        </a>
-        <a class="map-card" href="pages/settings.html">
-          <strong>설정</strong>
-          <span>프로필 · 선호메뉴 · 예산관리</span>
-        </a>
-      </div>
-    </section>
-  </main>
-</body>
-</html>
+function hashString(value) {
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function getRecipeMarketFactor(recipeName) {
+  const now = new Date();
+  const daySeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+  const hash = hashString(`${recipeName}-${daySeed}`);
+  const offsetPercent = (hash % 17) - 8;
+  return 1 + offsetPercent / 100;
+}
+
+function roundToHundred(value) {
+  return Math.max(100, Math.round(value / 100) * 100);
+}
+
+function buildRecipeDetail(recipe) {
+  const profileByKeyword = [
+    {
+      test: /김치제육|제육/,
+      ingredients: [
+        { name: "돼지고기", amount: "220g", baseCost: 2800 },
+        { name: "김치", amount: "180g", baseCost: 1400 },
+        { name: "양파", amount: "1/2개", baseCost: 600 },
+        { name: "고추장", amount: "1큰술", baseCost: 300 },
+        { name: "간장", amount: "1큰술", baseCost: 200 }
+      ],
+      steps: [
+        "양파를 먼저 볶아 단맛을 끌어낸 뒤 돼지고기를 센 불에 익힙니다.",
+        "김치를 넣고 수분이 줄어들 때까지 볶아 감칠맛을 올립니다.",
+        "고추장과 간장을 넣어 양념을 고르게 입힙니다.",
+        "약불에서 1분 마무리해 밥과 함께 제공합니다."
+      ],
+      substitutes: ["돼지고기 -> 닭다리살", "김치 -> 신김치+식초 소량", "고추장 -> 고춧가루+된장 소량"]
+    },
+    {
+      test: /된장찌개|순두부찌개|찌개/,
+      ingredients: [
+        { name: "된장/순두부", amount: "된장 1.5큰술 또는 순두부 300g", baseCost: 1200 },
+        { name: "애호박", amount: "1/3개", baseCost: 500 },
+        { name: "양파", amount: "1/2개", baseCost: 600 },
+        { name: "두부", amount: "150g", baseCost: 700 },
+        { name: "멸치육수", amount: "500ml", baseCost: 500 }
+      ],
+      steps: [
+        "육수에 된장을 풀고 중불에서 끓여 기본 맛을 만듭니다.",
+        "양파와 애호박을 넣고 3분간 끓입니다.",
+        "두부 또는 순두부를 넣고 한소끔 더 끓입니다.",
+        "간을 보고 부족하면 국간장으로 보정합니다."
+      ],
+      substitutes: ["멸치육수 -> 쌀뜨물", "애호박 -> 감자", "두부 -> 버섯"]
+    },
+    {
+      test: /파스타|토마토|크림/,
+      ingredients: [
+        { name: "파스타면", amount: "120g", baseCost: 1200 },
+        { name: "토마토소스/크림소스", amount: "150g", baseCost: 2100 },
+        { name: "양파", amount: "1/2개", baseCost: 600 },
+        { name: "마늘", amount: "2쪽", baseCost: 300 },
+        { name: "치즈", amount: "20g", baseCost: 700 }
+      ],
+      steps: [
+        "면을 소금물에 7~8분 삶아 체에 밭쳐둡니다.",
+        "팬에 마늘과 양파를 볶아 향을 낸 뒤 소스를 넣습니다.",
+        "삶은 면을 넣고 소스가 고르게 묻도록 2분간 볶습니다.",
+        "치즈를 올려 농도를 맞추고 후추로 마무리합니다."
+      ],
+      substitutes: ["파스타면 -> 우동면", "치즈 -> 우유+버터 소량", "양파 -> 대파"]
+    },
+    {
+      test: /덮밥|비빔밥|오므라이스|볶음밥|밥/,
+      ingredients: [
+        { name: "밥", amount: "1공기", baseCost: 1000 },
+        { name: "주재료", amount: "돼지고기/참치/계란 중 1", baseCost: 1800 },
+        { name: "양파", amount: "1/3개", baseCost: 400 },
+        { name: "간장", amount: "1큰술", baseCost: 200 },
+        { name: "식용유", amount: "1큰술", baseCost: 100 }
+      ],
+      steps: [
+        "주재료를 먼저 볶아 향과 식감을 만듭니다.",
+        "양파를 넣어 단맛을 더하고 밥을 투입합니다.",
+        "간장으로 간을 맞추며 전체를 고르게 볶습니다.",
+        "기호에 맞춰 김가루 또는 계란을 올려 마무리합니다."
+      ],
+      substitutes: ["주재료(돼지고기) -> 참치", "주재료(참치) -> 두부", "밥 -> 현미밥"]
+    },
+    {
+      test: /국수|우동|국밥|국|탕|수프/,
+      ingredients: [
+        { name: "면/밥", amount: "면 120g 또는 밥 1공기", baseCost: 1100 },
+        { name: "육수", amount: "550ml", baseCost: 1000 },
+        { name: "대파", amount: "1/2대", baseCost: 400 },
+        { name: "부재료", amount: "어묵/콩나물/버섯 중 1", baseCost: 1300 },
+        { name: "간장", amount: "1큰술", baseCost: 200 }
+      ],
+      steps: [
+        "육수를 끓인 뒤 부재료를 먼저 넣어 맛을 우려냅니다.",
+        "면 또는 밥을 넣고 2~4분간 끓여 익힙니다.",
+        "간장으로 염도를 맞추고 대파를 넣습니다.",
+        "후추 또는 고춧가루로 기호에 맞게 마무리합니다."
+      ],
+      substitutes: ["육수 -> 물+다시다 소량", "어묵 -> 두부", "대파 -> 쪽파"]
+    },
+    {
+      test: /샐러드|포케|요거트|또띠아|월남쌈|아보카도/,
+      ingredients: [
+        { name: "채소믹스", amount: "120g", baseCost: 1800 },
+        { name: "단백질", amount: "닭가슴살/연어/두부 120g", baseCost: 2700 },
+        { name: "드레싱", amount: "2큰술", baseCost: 600 },
+        { name: "부재료", amount: "견과/옥수수/토마토", baseCost: 1000 },
+        { name: "또띠아/곡물", amount: "1장 또는 80g", baseCost: 900 }
+      ],
+      steps: [
+        "채소를 차갑게 준비해 식감을 살립니다.",
+        "단백질 재료를 굽거나 데쳐 한입 크기로 준비합니다.",
+        "볼에 재료를 층층이 담고 드레싱을 뿌립니다.",
+        "또띠아 또는 곡물을 곁들여 한 끼 구성을 완성합니다."
+      ],
+      substitutes: ["연어 -> 닭가슴살", "드레싱 -> 올리브유+레몬즙", "견과 -> 병아리콩"]
+    }
+  ];
+
+  const categoryFallback = {
+    "초저가": {
+      ingredients: [
+        { name: "주재료", amount: "1인분", baseCost: 1500 },
+        { name: "양파", amount: "1/3개", baseCost: 400 },
+        { name: "간장", amount: "1큰술", baseCost: 200 },
+        { name: "고춧가루", amount: "1작은술", baseCost: 200 },
+        { name: "식용유", amount: "1큰술", baseCost: 100 }
+      ],
+      steps: [
+        "주재료를 손질하고 팬 또는 냄비를 예열합니다.",
+        "양파와 함께 주재료를 볶거나 끓입니다.",
+        "간장과 고춧가루로 간을 맞춥니다.",
+        "불을 줄여 1분 더 익혀 마무리합니다."
+      ],
+      substitutes: ["양파 -> 대파", "간장 -> 소금", "식용유 -> 참기름 소량"]
+    },
+    "간편요리": {
+      ingredients: [
+        { name: "주재료", amount: "1인분", baseCost: 2600 },
+        { name: "탄수화물", amount: "밥/면 1인분", baseCost: 1100 },
+        { name: "양파", amount: "1/2개", baseCost: 600 },
+        { name: "양념", amount: "2큰술", baseCost: 500 },
+        { name: "부재료", amount: "1가지", baseCost: 900 }
+      ],
+      steps: [
+        "팬을 달군 뒤 주재료를 먼저 익힙니다.",
+        "탄수화물 재료를 넣고 함께 조리합니다.",
+        "양념을 넣고 수분을 맞춥니다.",
+        "부재료로 식감을 더해 완성합니다."
+      ],
+      substitutes: ["주재료 -> 두부", "양념 -> 굴소스", "양파 -> 대파"]
+    },
+    "건강식": {
+      ingredients: [
+        { name: "채소", amount: "120g", baseCost: 1700 },
+        { name: "단백질", amount: "120g", baseCost: 2500 },
+        { name: "곡물", amount: "80g", baseCost: 900 },
+        { name: "드레싱", amount: "2큰술", baseCost: 600 },
+        { name: "토핑", amount: "견과류 10g", baseCost: 600 }
+      ],
+      steps: [
+        "채소를 씻어 물기를 제거합니다.",
+        "단백질 재료를 굽거나 데쳐 준비합니다.",
+        "채소와 곡물을 담고 단백질을 올립니다.",
+        "드레싱과 토핑으로 마무리합니다."
+      ],
+      substitutes: ["단백질(닭) -> 두부", "곡물 -> 고구마", "견과류 -> 병아리콩"]
+    }
+  };
+
+  const profile = profileByKeyword.find((item) => item.test.test(recipe.name)) || categoryFallback[recipe.category] || categoryFallback["간편요리"];
+  const marketFactor = getRecipeMarketFactor(recipe.name);
+
+  const ingredients = profile.ingredients.map((item) => ({
+    ...item,
+    estimatedCost: roundToHundred(item.baseCost * marketFactor)
+  }));
+
+  const totalFromIngredients = ingredients.reduce((acc, item) => acc + item.estimatedCost, 0);
+  const estimatedPrice = roundToHundred((totalFromIngredients * 0.7) + (recipe.price * 0.3));
+  const lowestPrice = roundToHundred(Math.min(estimatedPrice * 0.9, recipe.price * 0.88));
+  const saving = Math.max(0, estimatedPrice - lowestPrice);
+
+  return {
+    ingredients,
+    steps: profile.steps,
+    substitutes: profile.substitutes,
+    estimatedPrice,
+    lowestPrice,
+    saving
+  };
+}
+
+function createAiSummaryHtml(title, lines) {
+  const items = lines.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
+  return `
+    <article class="ai-summary-card">
+      <h3>${escapeHtml(title)}</h3>
+      <ul>${items}</ul>
+    </article>
+  `;
+}
+
+function activateChipGroup(container) {
+  if (!container) return;
+
+  container.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement) || !target.classList.contains("chip")) return;
+
+    container.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+    target.classList.add("active");
+  });
+}
+
+function createStreamer(container, metaElement) {
+  const state = {
+    timer: null,
+    requestId: 0
+  };
+
+  return (title, lines) => {
+    state.requestId += 1;
+    const activeRequestId = state.requestId;
+    if (state.timer) clearTimeout(state.timer);
+
+    if (metaElement) {
+      metaElement.textContent = "AI 답변 생성 중...";
+    }
+
+    state.timer = setTimeout(() => {
+      if (activeRequestId !== state.requestId) {
+        return;
+      }
+
+      container.innerHTML = createAiSummaryHtml(title, lines);
+
+      if (metaElement) {
+        metaElement.textContent = `마지막 갱신: ${getNowLabel()}`;
+      }
+    }, 500);
+  };
+}
+
+// ============================================
+// 로그인 페이지
+// ============================================
+
+function initLogin() {
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const notice = document.getElementById("authNotice");
+  const status = document.getElementById("authStatus");
+  const loginTab = document.getElementById("showLoginBtn");
+  const signupTab = document.getElementById("showSignupBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const unlinkKakaoBtn = document.getElementById("unlinkKakaoBtn");
+  const unlinkNaverBtn = document.getElementById("unlinkNaverBtn");
+  const unlinkGoogleBtn = document.getElementById("unlinkGoogleBtn");
+  const socialButtons = document.querySelectorAll(".social[data-provider]");
+
+  if (!loginForm || !signupForm || !notice || !status || !loginTab || !signupTab) return;
+
+  const showNotice = (message, isError) => {
+    notice.textContent = message;
+    notice.style.display = "block";
+    notice.style.background = isError ? "#fce8e3" : "#eef6e7";
+    notice.style.borderColor = isError ? "#e2b1a4" : "#c8dab2";
+    notice.style.color = isError ? "#7a3425" : "#2f4b21";
+  };
+
+  const switchTab = (target) => {
+    const loginMode = target === "login";
+    loginForm.style.display = loginMode ? "grid" : "none";
+    signupForm.style.display = loginMode ? "none" : "grid";
+    loginTab.classList.toggle("active", loginMode);
+    signupTab.classList.toggle("active", !loginMode);
+  };
+
+  const renderStatus = async () => {
+    const token = getToken();
+
+    if (!token) {
+      status.innerHTML = '<p class="notice">현재 로그인된 계정이 없습니다.</p>';
+      return;
+    }
+
+    try {
+      const response = await apiCall("/user/me");
+      const user = response.user;
+
+      const linked = [];
+      if (user.social?.kakao?.id) linked.push("카카오");
+      if (user.social?.naver?.id) linked.push("네이버");
+      if (user.social?.google?.id) linked.push("구글");
+      const linkedText = linked.length ? linked.join(", ") : "없음";
+
+      status.innerHTML = `
+        <article class="ai-summary-card">
+          <h3>현재 계정</h3>
+          <ul>
+            <li>아이디: ${escapeHtml(user.id || "SNS 가입 사용자")}</li>
+            <li>이메일: ${escapeHtml(user.email || "미입력")}</li>
+            <li>이름: ${escapeHtml(user.name || "미입력")}</li>
+            <li>연동된 SNS: ${escapeHtml(linkedText)}</li>
+          </ul>
+        </article>
+      `;
+    } catch (error) {
+      console.error("사용자 정보 로드 실패:", error);
+      status.innerHTML = '<p class="notice">사용자 정보를 불러올 수 없습니다.</p>';
+    }
+  };
+
+  loginTab.addEventListener("click", () => switchTab("login"));
+  signupTab.addEventListener("click", () => switchTab("signup"));
+
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const idInput = document.getElementById("loginId");
+    const passwordInput = document.getElementById("loginPassword");
+    if (!(idInput instanceof HTMLInputElement) || !(passwordInput instanceof HTMLInputElement)) return;
+
+    const id = idInput.value.trim();
+    const password = passwordInput.value;
+
+    try {
+      const response = await apiCall("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ id, password })
+      });
+
+      setToken(response.token);
+      renderStatus();
+      idInput.value = "";
+      passwordInput.value = "";
+      showNotice("로그인 성공! SNS 연동 또는 메뉴 추천 기능을 이용해보세요.", false);
+    } catch (error) {
+      showNotice(error.message, true);
+    }
+  });
+
+  const processOAuthCallback = () => {
+    const params = new URLSearchParams(window.location.search);
+    const socialToken = params.get("token");
+    const socialError = params.get("error");
+
+    if (socialToken) {
+      setToken(socialToken);
+      renderStatus();
+      showNotice("소셜 로그인/연동이 완료되었습니다.", false);
+      params.delete("token");
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
+    if (socialError) {
+      showNotice(decodeURIComponent(socialError), true);
+      params.delete("error");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  };
+
+  processOAuthCallback();
+
+  signupForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const idInput = document.getElementById("signupId");
+    const emailInput = document.getElementById("signupEmail");
+    const passwordInput = document.getElementById("signupPassword");
+    const confirmInput = document.getElementById("signupPasswordConfirm");
+    if (
+      !(idInput instanceof HTMLInputElement) ||
+      !(emailInput instanceof HTMLInputElement) ||
+      !(passwordInput instanceof HTMLInputElement) ||
+      !(confirmInput instanceof HTMLInputElement)
+    ) {
+      return;
+    }
+
+    const id = idInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const passwordConfirm = confirmInput.value;
+
+    try {
+      const response = await apiCall("/auth/signup", {
+        method: "POST",
+        body: JSON.stringify({ id, email, password, passwordConfirm })
+      });
+
+      setToken(response.token);
+      switchTab("login");
+      idInput.value = "";
+      emailInput.value = "";
+      passwordInput.value = "";
+      confirmInput.value = "";
+      renderStatus();
+      showNotice("회원가입이 완료되어 자동 로그인되었습니다.", false);
+    } catch (error) {
+      showNotice(error.message, true);
+    }
+  });
+
+  socialButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const provider = button.getAttribute("data-provider");
+      if (!provider) return;
+
+      window.location.href = `${API_BASE_URL}/auth/${provider}/oauth`;
+    });
+  });
+
+  if (unlinkKakaoBtn) {
+    unlinkKakaoBtn.addEventListener("click", async () => {
+      try {
+        await apiCall("/user/unlink-social/kakao", { method: "POST" });
+        showNotice("카카오 연동이 해제되었습니다.", false);
+        renderStatus();
+      } catch (error) {
+        showNotice(error.message, true);
+      }
+    });
+  }
+
+  if (unlinkNaverBtn) {
+    unlinkNaverBtn.addEventListener("click", async () => {
+      try {
+        await apiCall("/user/unlink-social/naver", { method: "POST" });
+        showNotice("네이버 연동이 해제되었습니다.", false);
+        renderStatus();
+      } catch (error) {
+        showNotice(error.message, true);
+      }
+    });
+  }
+
+  if (unlinkGoogleBtn) {
+    unlinkGoogleBtn.addEventListener("click", async () => {
+      try {
+        await apiCall("/user/unlink-social/google", { method: "POST" });
+        showNotice("구글 연동이 해제되었습니다.", false);
+        renderStatus();
+      } catch (error) {
+        showNotice(error.message, true);
+      }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      clearToken();
+      renderStatus();
+      showNotice("로그아웃되었습니다.", false);
+    });
+  }
+
+  renderStatus();
+}
+
+// ============================================
+// 레시피 상세 페이지
+// ============================================
+
+function initRecipeDetail() {
+  const titleEl = document.getElementById("detailTitle");
+  const ingredientsEl = document.getElementById("detailIngredients");
+  const priceEl = document.getElementById("detailPrice");
+  const priceMetaEl = document.getElementById("detailPriceMeta");
+  const stepsEl = document.getElementById("detailSteps");
+  const subsEl = document.getElementById("detailSubs");
+  const aiNoteEl = document.getElementById("detailAiNote");
+
+  if (!titleEl || !ingredientsEl || !priceEl || !stepsEl || !subsEl) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const selectedMenu = params.get("menu") || "";
+  const recipe = recipes.find((item) => item.name === selectedMenu) || recipes[0];
+  const detail = buildRecipeDetail(recipe);
+
+  titleEl.textContent = `${recipe.name} 상세`;
+
+  ingredientsEl.innerHTML = detail.ingredients
+    .map((item) => `<li>${escapeHtml(item.name)} ${escapeHtml(item.amount)} · 약 ${formatWon(item.estimatedCost)}</li>`)
+    .join("");
+
+  priceEl.textContent = `약 ${formatWon(detail.estimatedPrice)}`;
+
+  if (priceMetaEl) {
+    priceMetaEl.textContent = `메뉴별 AI 분석 최저가 ${formatWon(detail.lowestPrice)} | 절약 예상 ${formatWon(detail.saving)}`;
+  }
+
+  stepsEl.innerHTML = detail.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+  subsEl.innerHTML = detail.substitutes.map((sub) => `<li>${escapeHtml(sub)}</li>`).join("");
+
+  if (aiNoteEl) {
+    aiNoteEl.textContent = `${recipe.name} 기준으로 재료량/예상 단가/조리 순서를 한 번에 생성했습니다.`;
+  }
+}
+
+// ============================================
+// 메뉴 추천 페이지
+// ============================================
+
+function initRecommend() {
+  const list = document.getElementById("recommendList");
+  const budgetFilter = document.getElementById("budgetFilter");
+  const aiButton = document.getElementById("recommendAiBtn");
+  const aiResult = document.getElementById("recommendAiResult");
+  const aiMeta = document.getElementById("recommendAiMeta");
+  if (!list || !budgetFilter) return;
+
+  const streamAi = aiResult ? createStreamer(aiResult, aiMeta) : null;
+  let requestCount = 0;
+
+  const getFiltered = () => {
+    const max = Number(budgetFilter.value);
+    return recipes.filter((recipe) => recipe.price <= max);
+  };
+
+  const render = () => {
+    const filtered = getFiltered();
+    list.innerHTML = filtered.map(createRecipeCard).join("");
+  };
+
+  const renderAi = () => {
+    if (!streamAi) return;
+    requestCount += 1;
+    const max = Number(budgetFilter.value);
+    const filtered = getFiltered();
+    if (!filtered.length) {
+      streamAi("AI 추천 답변", [
+        `예산 ${formatWon(max)} 기준으로 분석한 결과 현재 추천 가능한 메뉴가 없습니다.`,
+        "예산 상한을 높이거나 레시피 검색 페이지에서 조건을 넓혀보세요."
+      ]);
+      return;
+    }
+
+    const cheapest = [...filtered].sort((a, b) => a.price - b.price)[0];
+    const picked = [...filtered].sort(() => Math.random() - 0.5).slice(0, Math.min(2, filtered.length));
+    const avg = Math.round(filtered.reduce((acc, recipe) => acc + recipe.price, 0) / filtered.length);
+    const categories = [...new Set(filtered.map((recipe) => recipe.category))].join(", ");
+    const strategy = randomPick([
+      "남은 예산을 다음 끼니에 분배하는 절약형 추천",
+      "평균 비용을 유지하면서 만족도를 높이는 균형형 추천",
+      "현재 인기 메뉴를 반영한 변동형 추천"
+    ]);
+
+    streamAi("AI 추천 답변", [
+      `예산 ${formatWon(max)} 이하 기준으로 ${filtered.length}개의 메뉴를 찾았습니다.`,
+      `가장 경제적인 메뉴는 ${cheapest.name} (${formatWon(cheapest.price)}) 입니다.`,
+      `현재 추천군의 평균 예상 비용은 ${formatWon(avg)} 입니다.`,
+      `추천 카테고리 분포: ${categories}`,
+      `이번 ${requestCount}회차 추가 추천: ${picked.map((item) => item.name).join(", ")}`,
+      `추천 전략: ${strategy}`
+    ]);
+  };
+
+  budgetFilter.addEventListener("change", () => {
+    render();
+    renderAi();
+  });
+  if (aiButton) aiButton.addEventListener("click", renderAi);
+  render();
+  renderAi();
+}
+
+// ============================================
+// 레시피 검색 페이지
+// ============================================
+
+function initSearch() {
+  const result = document.getElementById("searchResult");
+  const aiResult = document.getElementById("searchAiResult");
+  const categoryChips = document.getElementById("categoryChips");
+  const button = document.getElementById("searchBtn");
+  const askAiMenuBtn = document.getElementById("askAiMenuBtn");
+  const aiMeta = document.getElementById("searchAiMeta");
+  const minBudget = document.getElementById("minBudget");
+  const maxBudget = document.getElementById("maxBudget");
+  const ownedToggle = document.getElementById("ownedToggle");
+  const foodName = document.getElementById("foodName");
+  const aiMenuPrompt = document.getElementById("aiMenuPrompt");
+
+  if (!result || !categoryChips || !button || !minBudget || !maxBudget || !foodName) return;
+
+  const streamAi = aiResult ? createStreamer(aiResult, aiMeta) : null;
+  let searchCount = 0;
+
+  activateChipGroup(categoryChips);
+
+  const getFiltered = ({ ignoreKeyword = false } = {}) => {
+    const min = Number(minBudget.value) || 0;
+    const max = Number(maxBudget.value) || 999999;
+    const keyword = foodName.value.trim();
+    const active = categoryChips.querySelector(".chip.active");
+    const selectedCategory = active ? active.getAttribute("data-category") : "전체";
+
+    return recipes.filter((recipe) => {
+      const byBudget = recipe.price >= min && recipe.price <= max;
+      const byCategory = selectedCategory === "전체" || recipe.category === selectedCategory;
+      const byKeyword = ignoreKeyword || !keyword || recipe.name.includes(keyword);
+      return byBudget && byCategory && byKeyword;
+    });
+  };
+
+  const getPromptScore = (recipe, question) => {
+    const q = question.toLowerCase();
+    let score = 0;
+
+    if (!q) return score;
+    if (q.includes(recipe.name.toLowerCase())) score += 8;
+
+    const keywordRules = [
+      { keys: ["매운", "얼큰", "칼칼", "매콤"], test: /김치|찌개|마파|제육|비빔/ },
+      { keys: ["가벼운", "다이어트", "헬시", "건강"], test: /샐러드|두부|닭가슴살|요거트|현미|수프|아보카도/ },
+      { keys: ["든든", "포만", "배부", "푸짐"], test: /덮밥|국밥|불고기|파스타|카레|오므라이스/ },
+      { keys: ["국물", "따뜻", "해장"], test: /국|찌개|탕|수프|우동/ },
+      { keys: ["면", "누들", "국수", "파스타"], test: /국수|우동|파스타|짬뽕/ },
+      { keys: ["밥", "덮밥", "라이스"], test: /밥|덮밥|비빔밥|오므라이스|주먹밥/ },
+      { keys: ["한식", "집밥", "한국"], test: /찌개|국|볶음|비빔밥|불고기|된장|미역/ },
+      { keys: ["양식", "서양"], test: /파스타|샌드|포케|또띠아/ },
+      { keys: ["간단", "빠른", "초간단"], test: /계란|주먹밥|볶음밥|덮밥|또띠아/ },
+      { keys: ["저렴", "가성비", "싼", "절약"], test: null }
+    ];
+
+    keywordRules.forEach((rule) => {
+      const matched = rule.keys.some((key) => q.includes(key));
+      if (!matched) return;
+
+      if (rule.test && rule.test.test(recipe.name)) {
+        score += 3;
+      }
+
+      if (rule.keys.includes("저렴") && recipe.price <= 5500) {
+        score += 4;
+      }
+    });
+
+    if ((q.includes("비건") || q.includes("채식")) && /두부|샐러드|렌틸콩|아보카도|버섯/.test(recipe.name)) {
+      score += 5;
+    }
+
+    return score;
+  };
+
+  const renderAiMenuByQuestion = () => {
+    if (!streamAi || !(aiMenuPrompt instanceof HTMLTextAreaElement)) return;
+    const question = aiMenuPrompt.value.trim();
+    const min = Number(minBudget.value) || 0;
+    const max = Number(maxBudget.value) || 999999;
+    const optimized = ownedToggle instanceof HTMLInputElement && ownedToggle.checked;
+    const candidates = getFiltered({ ignoreKeyword: true });
+
+    if (!question) {
+      streamAi("AI 메뉴 추천 답변", [
+        "질문을 입력해 주세요. 예: 매콤하고 든든한 저녁 메뉴 추천해줘",
+        `현재 검색 예산 범위: ${formatWon(min)} ~ ${formatWon(max)}`
+      ]);
+      return;
+    }
+
+    if (!candidates.length) {
+      streamAi("AI 메뉴 추천 답변", [
+        `질문: ${question}`,
+        "현재 예산/카테고리 조건에서 추천 가능한 메뉴가 없습니다.",
+        "예산 상한을 높이거나 카테고리를 전체로 변경해 다시 질문해보세요."
+      ]);
+      return;
+    }
+
+    const ranked = [...candidates]
+      .map((recipe) => ({ recipe, score: getPromptScore(recipe, question) }))
+      .sort((a, b) => (b.score - a.score) || (a.recipe.price - b.recipe.price))
+      .slice(0, 3)
+      .map((item) => item.recipe);
+
+    const fallback = [...candidates].sort((a, b) => a.price - b.price).slice(0, 3);
+    const picks = ranked.length ? ranked : fallback;
+
+    streamAi("AI 메뉴 추천 답변", [
+      `질문: ${question}`,
+      `조건 범위: ${formatWon(min)} ~ ${formatWon(max)} | 후보 ${candidates.length}개`,
+      `1순위: ${picks[0] ? `${picks[0].name} (${formatWon(picks[0].price)})` : "없음"}`,
+      `2순위: ${picks[1] ? `${picks[1].name} (${formatWon(picks[1].price)})` : "없음"}`,
+      `3순위: ${picks[2] ? `${picks[2].name} (${formatWon(picks[2].price)})` : "없음"}`,
+      optimized ? "보유 재료 최적화 기준을 함께 반영해 추천했습니다." : "일반 추천 기준으로 메뉴를 구성했습니다."
+    ]);
+  };
+
+  const renderAi = (filtered) => {
+    if (!streamAi) return;
+    searchCount += 1;
+    const min = Number(minBudget.value) || 0;
+    const max = Number(maxBudget.value) || 999999;
+    const keyword = foodName.value.trim() || "전체 메뉴";
+    const optimized = ownedToggle instanceof HTMLInputElement && ownedToggle.checked;
+
+    if (!filtered.length) {
+      streamAi("AI 검색 답변", [
+        `${keyword} 조건에서 ${formatWon(min)} ~ ${formatWon(max)} 범위를 분석했습니다.`,
+        "일치하는 레시피가 없어 예산 범위 확장 또는 카테고리 변경을 권장합니다.",
+        `검색 요청 번호: ${searchCount}`
+      ]);
+      return;
+    }
+
+    const top = filtered[0];
+    const avg = Math.round(filtered.reduce((acc, recipe) => acc + recipe.price, 0) / filtered.length);
+    const second = filtered.length > 1 ? filtered[1].name : "해당 없음";
+    const tone = randomPick(["비용 우선", "맛 균형", "재료 활용"]);
+
+    streamAi("AI 검색 답변", [
+      `${keyword} 기준으로 ${filtered.length}개의 레시피를 찾았습니다.`,
+      `우선 추천 메뉴는 ${top.name}이며 예상 비용은 ${formatWon(top.price)} 입니다.`,
+      `검색 결과 평균 예상 비용은 ${formatWon(avg)} 입니다.`,
+      optimized ? "보유 재료 최적화가 켜져 있어 재료 중복 구매를 줄이는 방향으로 추천했습니다." : "보유 재료 최적화가 꺼져 있어 일반 추천 기준으로 정렬했습니다.",
+      `차선 추천 메뉴: ${second}`,
+      `이번 응답 포커스: ${tone} | 요청 #${searchCount}`
+    ]);
+  };
+
+  const render = () => {
+    const filtered = getFiltered();
+
+    result.innerHTML = filtered.length
+      ? filtered.map(createRecipeCard).join("")
+      : '<p class="notice">조건에 맞는 레시피가 없습니다. 예산 범위를 넓히거나 카테고리를 변경해보세요.</p>';
+
+    renderAi(filtered);
+  };
+
+  categoryChips.addEventListener("click", render);
+  button.addEventListener("click", render);
+  if (askAiMenuBtn) askAiMenuBtn.addEventListener("click", renderAiMenuByQuestion);
+  render();
+}
+
+// ============================================
+// 재료 관리 페이지
+// ============================================
+
+function initIngredients() {
+  const ingredientInput = document.getElementById("ingredientInput");
+  const shoppingInput = document.getElementById("shoppingInput");
+  const ingredientList = document.getElementById("ingredientList");
+  const shoppingList = document.getElementById("shoppingList");
+  const addIngredientBtn = document.getElementById("addIngredientBtn");
+  const addShoppingBtn = document.getElementById("addShoppingBtn");
+
+  if (!ingredientInput || !shoppingInput || !ingredientList || !shoppingList || !addIngredientBtn || !addShoppingBtn) return;
+
+  const loadIngredients = async () => {
+    try {
+      const response = await apiCall("/user/ingredients");
+      ingredientList.innerHTML = response.ingredients
+        .map((item, idx) => `<li>${escapeHtml(item.name)}</li>`)
+        .join("");
+    } catch (error) {
+      console.error("재료 로드 실패:", error);
+    }
+  };
+
+  const loadShopping = async () => {
+    try {
+      const response = await apiCall("/user/shopping");
+      shoppingList.innerHTML = response.shopping
+        .map((item, idx) => `<li>${escapeHtml(item.name)}</li>`)
+        .join("");
+    } catch (error) {
+      console.error("쇼핑 목록 로드 실패:", error);
+    }
+  };
+
+  addIngredientBtn.addEventListener("click", async () => {
+    const text = ingredientInput.value.trim();
+    if (!text) return;
+
+    try {
+      await apiCall("/user/ingredients", {
+        method: "POST",
+        body: JSON.stringify({ name: text })
+      });
+      ingredientInput.value = "";
+      loadIngredients();
+    } catch (error) {
+      console.error("재료 추가 실패:", error);
+    }
+  });
+
+  addShoppingBtn.addEventListener("click", async () => {
+    const text = shoppingInput.value.trim();
+    if (!text) return;
+
+    try {
+      await apiCall("/user/shopping", {
+        method: "POST",
+        body: JSON.stringify({ name: text })
+      });
+      shoppingInput.value = "";
+      loadShopping();
+    } catch (error) {
+      console.error("쇼핑 항목 추가 실패:", error);
+    }
+  });
+
+  // 로그인되어 있으면 로드
+  if (getToken()) {
+    loadIngredients();
+    loadShopping();
+  }
+}
+
+// ============================================
+// 설정 페이지
+// ============================================
+
+function initSettings() {
+  const chips = document.querySelectorAll(".panel .chip");
+  const saveButton = document.getElementById("saveBudgetBtn");
+  const budgetInput = document.getElementById("monthlyBudget");
+  const budgetText = document.getElementById("saveBudgetText");
+  if (!saveButton || !budgetInput || !budgetText) return;
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chip.classList.toggle("active");
+    });
+  });
+
+  saveButton.addEventListener("click", async () => {
+    const budget = Number(budgetInput.value);
+
+    if (isNaN(budget) || budget <= 0) {
+      budgetText.textContent = "유효한 예산을 입력해주세요.";
+      budgetText.style.color = "#7a3425";
+      return;
+    }
+
+    try {
+      await apiCall("/user/me", {
+        method: "PATCH",
+        body: JSON.stringify({ monthlyBudget: budget })
+      });
+
+      budgetText.textContent = "✅ 월 예산이 저장되었습니다: " + formatWon(budget);
+      budgetText.style.color = "#2f4b21";
+    } catch (error) {
+      budgetText.textContent = "❌ 저장 실패: " + error.message;
+      budgetText.style.color = "#7a3425";
+    }
+  });
+
+  // 로그인되어 있으면 현재 예산 로드
+  if (getToken()) {
+    apiCall("/user/me")
+      .then((response) => {
+        budgetInput.value = response.user.settings?.monthlyBudget || 50000;
+      })
+      .catch(console.error);
+  }
+}
+
+// ============================================
+// 페이지 초기화
+// ============================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  initLogin();
+  initRecipeDetail();
+  initRecommend();
+  initSearch();
+  initIngredients();
+  initSettings();
+});

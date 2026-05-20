@@ -23,3 +23,36 @@ VS Code Live Server 확장 사용 시 루트에서 실행하면 전체 링크가
 - 로그인/회원가입: 로컬 스토리지 기반 계정 생성 및 로그인
 - SNS 연동: 카카오/네이버 버튼으로 계정 연동, 연동 해제, SNS 로그인(빠른 회원가입 포함)
 - AI 응답: 검색/추천 페이지에서 답변 생성 완료 후 한 번에 표시되며, 요청마다 다른 추천 포인트를 생성
+
+## 백엔드 환경 변수
+
+`backend/.env` 또는 `backend/.env.example` 파일에 다음 값을 설정해야 합니다:
+
+- `MONGODB_URI`: MongoDB 연결 문자열
+  - 예: `mongodb+srv://<username>:<password>@<cluster-url>/mealfit?retryWrites=true&w=majority`
+- `JWT_SECRET`: JWT 서명용 비밀 문자열
+- `FRONTEND_URL`: 프론트엔드가 실행되는 주소
+  - 예: `http://localhost:3000` 또는 `http://localhost:5500`
+- `BACKEND_URL`: 백엔드가 외부에서 접근 가능한 주소
+  - 예: `http://localhost:5000`
+- `KAKAO_CLIENT_ID`, `KAKAO_CLIENT_SECRET`
+- `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+
+### 카카오 리디렉션 URI 예시
+
+- `http://localhost:5000/api/auth/kakao/callback`
+
+### 네이버 리디렉션 URI 예시
+
+- `http://localhost:5000/api/auth/naver/callback`
+
+### 구글 리디렉션 URI 예시
+
+- `http://localhost:5000/api/auth/google/callback`
+
+## 디버깅
+
+백엔드가 실행 중일 때 아래 URL로 상태를 확인할 수 있습니다:
+
+- `http://localhost:5000/api/auth/status`
